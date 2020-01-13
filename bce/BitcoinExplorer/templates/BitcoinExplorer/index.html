@@ -1,2 +1,39 @@
-<p>Bitcoin Explorer</p>
-<a href="BlockExplorer">click here</a>
+<!doctype html>
+<html>
+    <body>
+    	<p>Blockchain Explorer</p>
+    	<p>Latest blocks</p>
+		{% if latest_blocks %}
+			<table>
+				<tr>
+					<th>
+						Height
+					</th>
+					<th>
+						Hash
+					</th>
+					<th>
+						Mined
+					</th>
+				</tr>
+			{% for block in latest_blocks %}
+				<tr>
+				{% for feature in block %}
+					{% if feature == block.0 %}
+						<td>
+							<a href="/BitcoinExplorer/{{block.0}}/">{{feature}}</a>
+						</td>
+					{% else %}
+						<td>
+							{{feature}}
+						</td>
+					{% endif %}
+				{% endfor %}
+				</tr>
+			{% endfor %}
+		</table>
+		{% else %}
+			<p>No polls are available.</p>
+		{% endif %}
+	</body>
+</html>

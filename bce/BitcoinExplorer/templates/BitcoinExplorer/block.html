@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+    <body>
+    	{% if height %}
+	    	<table>
+	    		<tr>
+	    			<td>Height</td>
+	    			<td>{{height}}</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Block hash</td>
+	    			<td>{{hash}}</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Previous block hash</td>
+	    			<td>{{previous_hash}}</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Time mined</td>
+	    			<td>{{time}}</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Confirmations</td>
+	    			<td>{{confirmations}}</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Nonce</td>
+	    			<td>{{nonce}}</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Total transactions</td>
+	    			<td>{{total_transactions}}</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Total transacted</td>
+	    			<td>{{total_transacted}}</td>
+	    		</tr>
+	    		<tr>
+	    			<td>Total fee</td>
+	    			<td>{{total_fee}}</td>
+	    		</tr>
+	    	</table>
+    	{% else %}
+    		<p>Block does not exist</p>
+    	{% endif %}
+    </body>
+</html>
