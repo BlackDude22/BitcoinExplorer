@@ -5,7 +5,10 @@ from django.template import loader
 from BitcoinExplorer.session import *
 
 def index(request):
-    latest_blocks = get_latest_blocks()
+    client = Client()
+    client.create_session()
+    latest_blocks = client.execute_command('python latest_blocks.py')
+    client.close_session()
     template = loader.get_template('BitcoinExplorer/index.html')
     context = {
         'latest_blocks': latest_blocks,
@@ -13,8 +16,10 @@ def index(request):
     return render(request, 'BitcoinExplorer/index.html', context)
 
 def details(request, block_height):
-    # block = ["height", "hash", "previous_hash","time", "confirmations", "nonce", "total_transactions", "total_transacted", "total_fee"]
-    block = get_block(block_height)
+    client = Client()
+    client.create_session()
+    block = client.execute_command('python block.py ' + str(block_height))
+    client.close_session()
     context = {
     	'height': block[0],
     	'hash': block[1],

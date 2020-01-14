@@ -2,53 +2,36 @@ import paramiko
 import sys
 import ast
 
-nbytes = 4096
-hostname = '158.129.140.201'
-port = 3637
-username = 'user022' 
-password = 'JZUkRMG7'
+class Client:
+	def __init__(self):
+		self.nbytes = 4096
+		self.hostname = '158.129.140.201'
+		self.port = 3637
+		self.username = 'user022' 
+		self.password = 'JZUkRMG7'
+		self.client = None
+		self.session = None
 
-def get_latest_blocks():	
-	client = paramiko.Transport((hostname, port))
-	client.connect(username=username, password=password)
+	def create_session(self):
+		if self.client is None:
+			self.client = paramiko.Transport((self.hostname, self.port))
+			self.client.connect(username=self.username, password=self.password)
+			self.session = self.client.open_channel(kind='session')
 
-	session = client.open_channel(kind='session')
-	command = 'python latest_blocks.py'
+	def execute_command(self, command):
+		if self.client is not None:
+			self.session.exec_command(command)
+			stdout_data = []
+			while True:
+			    if self.session.recv_ready():
+			        stdout_data.append(self.session.recv(self.nbytes))
+			    if self.session.exit_status_ready():
+			        break
 
-	stdout_data = []
-	session.exec_command(command)
-	while True:
-	    if session.recv_ready():
-	        stdout_data.append(session.recv(nbytes))
-	    if session.exit_status_ready():
-	        break
+			return ast.literal_eval(stdout_data[0][:-1].decode("utf-8"))
 
-	session.close()
-	client.close()
-
-	return ast.literal_eval(stdout_data[0][:-1].decode("utf-8"))
-
-def get_block(block_height):
-	client = paramiko.Transport((hostname, port))
-	client.connect(username=username, password=password)
-
-	session = client.open_channel(kind='session')
-	command = 'python block.py ' + str(block_height)
-
-	stdout_data = []
-	session.exec_command(command)
-	while True:
-	    if session.recv_ready():
-	        stdout_data.append(session.recv(nbytes))
-	    if session.exit_status_ready():
-	        break
-
-	session.close()
-	client.close()
-
-	return ast.literal_eval(stdout_data[0][:-1].decode("utf-8"))
-
-
-def close_session():
-	session.close()
-	client.close()
+	def close_session(self):
+		self.session.close()
+		self.client.close()
+		self.session = None
+		self.client = None
